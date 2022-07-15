@@ -1,22 +1,41 @@
 import express from 'express';
+import 'express-async-errors'
 import mongoose from 'mongoose';
-import 'dotenv/config'
-import { UserController } from './domain/controllers/userController'
+import dotenv from "dotenv"
 
-const app = express();
+
+import { UserController } from './domain/controllers/userController'
+import { LoginController } from './domain/controllers/loginController'
+import { errorHandler } from './infra/http/errorHandler';
 
 const ModuleUserController = new UserController();
+const ModuleSessionController = new LoginController();
 
-app.get('/', async (req, res) => {
+dotenv.config();
+const app = express();
+app.use(express.json());
+
+app.post('/users', async (req, res) => {
+  
   const response = await ModuleUserController.create({
-    email: 'jairo@mail1.com', 
-    name: 'jairo',
-    password: 'jairo123'
+    email: req.body.email, 
+    name: req.body.name,
+    password: req.body.password,
   })
 
-  return res.json({ ...response });
+  return res.json(response);
 })
 
+app.post('/session', async (req, res) => {
+  const response = await ModuleSessionController.create({
+    email: req.body.email,
+    password: req.body.password,
+  })
+
+  res.json(response);
+})
+
+app.use(errorHandler);
 
 mongoose.connect('mongodb://jairo:jairosl@localhost:27017/admin', () => {
   console.log('connect to database')

@@ -1,9 +1,8 @@
 import express from 'express';
 import 'express-async-errors'
 import mongoose from 'mongoose';
-import dotenv from "dotenv"
+import dotenv from 'dotenv';
 import cors from 'cors';
-
 
 
 import { UserController } from './domain/controllers/userController'
@@ -42,9 +41,11 @@ app.post('/session', async (req, res) => {
 
 app.use(errorHandler);
 
+const port = process.env.PORT || 3333
+
 mongoose.connect(process.env.MONGO_URL, () => {
   console.log('connect to database')
-  app.listen(3333, () => {
+  app.listen(port, () => {
     console.log('start server')
   })
 })

@@ -2,6 +2,7 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       SECRET: string;
+      MONGO_URL: string;
     }
   }
 }

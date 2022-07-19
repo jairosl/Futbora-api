@@ -2,6 +2,8 @@ import express from 'express';
 import 'express-async-errors'
 import mongoose from 'mongoose';
 import dotenv from "dotenv"
+import cors from 'cors';
+
 
 
 import { UserController } from './domain/controllers/userController'
@@ -14,6 +16,9 @@ const ModuleSessionController = new LoginController();
 dotenv.config();
 const app = express();
 app.use(express.json());
+app.use(cors({
+    origin: '*'
+}))
 
 app.post('/users', async (req, res) => {
   
@@ -37,7 +42,7 @@ app.post('/session', async (req, res) => {
 
 app.use(errorHandler);
 
-mongoose.connect('mongodb://jairo:jairosl@localhost:27017/admin', () => {
+mongoose.connect(process.env.MONGO_URL, () => {
   console.log('connect to database')
   app.listen(3333, () => {
     console.log('start server')
